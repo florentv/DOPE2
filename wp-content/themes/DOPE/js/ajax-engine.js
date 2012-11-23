@@ -4,7 +4,7 @@
 
   jQuery(document).ready(function($) {
     var container, containerView, elementAnimationAfter, elementAnimationBefore, globalAnimationAfterLoading, globalAnimationBeforeLoading, init_AJAX, isArticle, isIntern, isPagedLink, loadPage, newCommentTemplate, postComment, quickSearchArea, quickSearchElements, renderPage, root, searchTemplate, selected_result, spotlight, spotlightView, switchB, switchButton, themeRoot, xhrQuickSearch;
-    root = 'http://dope.net78.net/wordpress';
+    root = 'http://localhost:8888/wordpress/';
     themeRoot = root + "/wp-content/themes/DOPE";
     selected_result = -1;
     quickSearchArea = $('#quicksearch-area');
@@ -16,7 +16,7 @@
       return !/wordpress\/(?:category|page|$){1}/.test(url);
     };
     isIntern = function(url) {
-      return (/^(?:http:\/\/)?localhost:8888\/test\/wordpress\//.test(url) || (/^(http:\/\/)?dope\.net78\.net\/wordpress\//.test(url))) && !/(?:wp\-admin|wp\-login|\.(png|jpeg|mp3|mpeg|pdf)$)/.test(url);
+      return (/^(?:http:\/\/)?localhost:8888\/wordpress\//.test(url) || (/^(http:\/\/)?localhost\:8888\/wordpress\//.test(url))) && !/(?:wp\-admin|wp\-login|\.(png|jpeg|mp3|mpeg|pdf)$)/.test(url);
     };
     isPagedLink = function(url) {
       return /wordpress\/page{1}/.test(url);
