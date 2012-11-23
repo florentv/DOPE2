@@ -62,11 +62,15 @@ li {
 
 #header {
 /*background: url(./images/wallpaper.png);*/
-	z-index:10;
-	position:relative;
-	bottom:10px;
-	padding-bottom:15px;
-	padding-top:15px;
+	position: fixed;
+	top : 0px;
+	height: 55px;
+	background: rgb(227,227,227);
+	z-index:999999;
+}
+
+#masthead {
+	margin-top: 5px;
 }
 
 #loading {
@@ -86,9 +90,6 @@ li {
 	margin:auto;
 	top:50%;
 	left:40%;
-}
-
-#header {
 }
 
 #bar {
