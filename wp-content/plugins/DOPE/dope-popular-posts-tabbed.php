@@ -45,66 +45,49 @@ class DopePopulaireWidget extends WP_Widget
     $titleLength = empty($instance['titleLength']) ? 20 : $instance['titleLength'];
     
     $args = array(
-    	'title' => __('Popular Posts', 'wordpress-popular-posts'),
+    	'header' => '',
     	'limit' => 5,
     	'range' => 'daily',
     	'order_by' => 'views',
     	'post_type' => 'post',
-    	'author' => '',
     	'cat' => '',
-    	'shorten_title' => array(
-    		'active' => true,
-    		'length' => $titleLength,
-    		'keep_format' => false
-    	),
-    	'post-excerpt' => array(
-    		'active' => false,
-    		'length' => 55
-    	),				
-    	'thumbnail' => array(
-    		'active' => true,
-    		'width' => 10,
-    		'height' => 10
-    	),
+    	'author' => '',
+    	'title_length' => 20,
+    	'excerpt_length' => 0,
+    	'excerpt_format' => 0,				
+    	'thumbnail_width' => 40,
+    	'thumbnail_height' => 40,
+    	'thumbnail_selection' => 'wppgenerated',
     	'rating' => false,
-    	'stats_tag' => array(
-    		'comment_count' => false,
-    		'views' => false,
-    		'author' => false,
-    		'date' => array(
-    			'active' => false,
-    			'format' => 'F j, Y'
-    		)
-    	),
-    	'markup' => array(
-    		'custom_html' => false,
-    		'wpp-start' => '&lt;ul&gt;',
-    		'wpp-end' => '&lt;/ul&gt;',
-    		'post-start' => '&lt;li&gt;',
-    		'post-end' => '&lt;/li&gt;',
-    		'title-start' => '&lt;h2&gt;',
-    		'title-end' => '&lt;/h2&gt;',
-    		'pattern' => array(
-    			'active' => false,
-    			'form' => '{image} {title}: {summary} {stats}'
-    		)
-    	)
+    	'stats_comments' => false,
+    	'stats_views' => false,
+    	'stats_author' => false,
+    	'stats_date' => false,
+    	'stats_date_format' => 'F j, Y',
+    	'wpp_start' => '<ul>',
+    	'wpp_end' => '</ul>',
+    	'post_start' => '<li>',
+    	'post_end' => '</li>',
+    	'header_start' => '<h2>',
+    	'header_end' => '</h2>',
+    	'do_pattern' => false,
+    	'pattern_form' => '{image} {title}'
     );
  
     if (!empty($title))
       echo $before_title . $title . $after_title;?>
- 	<ul class="dope-populaire-control">
+ 	<ul id="dope-populaire-control">
  		<li>RÉCENT</li>
  		<li>30 JOURS</li>
  		<li>ALL-TIME</li>
  	</ul>
- 	<div class="main container"> <?php
+ 	<div id="dope-populaire-container"> <?php
  	$args['range'] = "weekly" ;
- 	wpp_get_mostpopular($args)
+ 	wpp_get_mostpopular($args);
  	$args['range'] = "monthly" ;
- 	wpp_get_mostpopular($args)
+ 	wpp_get_mostpopular($args);
  	$args['range'] = "all" ;
- 	wpp_get_mostpopular($args)
+ 	wpp_get_mostpopular($args);
  	?>
  	</div>
    <?php
@@ -113,4 +96,4 @@ class DopePopulaireWidget extends WP_Widget
   }
  
 }
-add_action( 'widgets_init', create_function('', 'return register_widget("DopeAleatoireWidget");') );?>
+add_action( 'widgets_init', create_function('', 'return register_widget("DopePopulaireWidget");') );?>
