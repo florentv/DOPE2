@@ -42,7 +42,7 @@ class DopePopulaireWidget extends WP_Widget
  
     echo $before_widget;
     $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
-    $titleLength = empty($instance['titleLength']) ? 20 : $instance['titleLength'];
+    $titleLength = empty($instance['titleLength']) ? 25 : $instance['titleLength'];
     
     $args = array(
     	'header' => '',
@@ -52,7 +52,7 @@ class DopePopulaireWidget extends WP_Widget
     	'post_type' => 'post',
     	'cat' => '',
     	'author' => '',
-    	'title_length' => 20,
+    	'title_length' => $titleLength,
     	'excerpt_length' => 0,
     	'excerpt_format' => 0,				
     	'thumbnail_width' => 40,

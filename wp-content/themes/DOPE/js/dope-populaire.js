@@ -1,7 +1,6 @@
 jQuery(document).ready(function($){
 		$('#dope-populaire-container').cycle({
 		fx: 'fade',
-		width: 304,
 		pager:  '#dope-populaire-control', 
 		pagerAnchorBuilder: function(idx, slide) { 
 		        // return selector string for existing anchor 
