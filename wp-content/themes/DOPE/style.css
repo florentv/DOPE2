@@ -787,7 +787,7 @@ h2 {
 }
 
 .post-single {
-/*background: url(http://www.welcomebrand.co.uk/wp-content/themes/welcomebrand-vintage/assets/images/body-background.jpg);*/
+background: url(http://www.welcomebrand.co.uk/wp-content/themes/welcomebrand-vintage/assets/images/body-background.jpg);*/
 	background-color:#f0f0f0;
 	box-shadow:0 0 8px -5px #656565;
 }
@@ -848,11 +848,25 @@ h2 {
 	font-weight:100;
 }
 
+#sidebar .post-song {
+	font-size:1em;
+	color:#232323;
+	font-family:'Helvetica Neue';
+	font-weight:100;	
+}
+
+#sidebar .post-artist {
+	font-size:1em;
+	color:#232323;
+	font-family:'Helvetica Neue';
+	font-weight:100;	
+}
+
 .featured-image {
 	text-align:center;
 }
 
-/* END POST SINGLE */
+/* END POST SINGLE 
 
 .popular-posts > ul > li {
 	list-style:none;

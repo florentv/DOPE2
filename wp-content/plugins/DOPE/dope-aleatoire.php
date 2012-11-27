@@ -57,7 +57,7 @@ class DopeAleatoireWidget extends WP_Widget
   	<li>
   		<a href="<?php echo $permalink ; ?>"><?php 
   		echo get_the_post_thumbnail($id, 'little', array('class' => 'sidebar-img-little', 'alt' => $the_post->post_title)) ;
-  		echo '<span class="title">' . shorten_title($the_post->post_title, $titleLength, '...') . '</span>';?>
+  		echo '<span class="title">' . doped_title(shorten_title($the_post->post_title, $titleLength, '...')) . '</span>';?>
   		</a>
   	</li>
   <?php } ?>

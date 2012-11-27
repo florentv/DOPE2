@@ -1103,7 +1103,7 @@ $thumb .= get_the_post_thumbnail($p->id, 'little', array('alt' => $title, 'class
 						
 						$thumb .= "</a>";
 					}
-					
+					$title_sub = doped_title($title_sub, true);
 					$data = array(
 						'title' => '<a href="'.$permalink.'" title="'.$title.'">'.$title_sub.'</a>',
 						'summary' => $excerpt,
