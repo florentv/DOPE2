@@ -1,6 +1,6 @@
 .htaccess
 README.txt
-index.php
+./index.php
 license.txt
 readme.html
 wordpress.esproj/
