@@ -26,7 +26,8 @@ jQuery(document).ready ($) ->
 		return
 		
 	globalAnimationAfterLoading = () ->
-		$('#loading').fadeOut 800
+		FB.XFBML.parse document.getElementById('entry-social-infos-single'), ->
+			$('#loading').fadeOut 800
 		return
 	
 	elementAnimationBefore = (jSelector) ->
@@ -51,10 +52,8 @@ jQuery(document).ready ($) ->
 		that = {}
 		icon = switchSelector.find('#spotlight-arrow')
 		that.up = () ->
-			switchSelector.animate({top: -10}, {duration: animationTime})
 			icon.css('background', "url('#{themeRoot}/icons/arrow-down.png') no-repeat")
 		that.down = () ->
-			switchSelector.animate({top: 32}, {duration: animationTime})
 			icon.css('background', "url('#{themeRoot}/icons/arrow-up.png') no-repeat")
 		that.stop = () ->
 			switchSelector.stop()
@@ -98,9 +97,7 @@ jQuery(document).ready ($) ->
 					.queue(elementAnimationBefore(jSelector))
 					.queue () -> 
 						jSelector.html(tempDiv.find(selector).html())
-						FB.XFBML.parse document.getElementById('entry-social-infos-single'), ->
-							jSelector.dequeue()
-							return	
+						jSelector.dequeue()	
 						return
 					.queue(elementAnimationAfter(jSelector))		
 				return			
@@ -122,6 +119,19 @@ jQuery(document).ready ($) ->
 			return
 		, 'html'
 		return
+
+	showNextPage = (url) ->
+		$.get url, {ajaxOn: true}, (data) ->
+			try
+				tempDiv = $("<div>").html(data)
+			catch e
+				location.href = document.URL
+				console.log "get the targeted URL failed"
+				return
+			tempDiv.find("h2").remove()
+			$("#content").find("#nav-below").remove()
+			$("#content").append(tempDiv.html())
+	
 		
 	init_AJAX = (url) ->
 		history.replaceState({pushStateActive: true}, 'first page', document.URL)
@@ -154,8 +164,13 @@ jQuery(document).ready ($) ->
 	$('body').on 'click', 'a', (event) ->
 		if isIntern @href
 			event.preventDefault()
-			loadPage @href, true, '#content', '#articles-widgets', '#ajax-scripts'
-			spotlightView.toggleState(false)
+			if isArticle(@href)
+				loadPage @href, true, '#content', '#articles-widgets', '#ajax-scripts'
+			else if isPagedLink(@href)
+				showNextPage @href
+			else
+				loadPage @href, true, '#content', '#articles-widgets'
+
 			return
 			
 	$('body').on 'submit', 'form', (event) ->

@@ -43,7 +43,6 @@
 			<?php } else { ?>
 				<div id="no-more-posts">THE END</div>    	
 			<?php } ?>
-		    <?php echo '#test# ' . get_page_number() . '/' . $wp_query->max_num_pages . ' #test#' ?>
 		<!--Navigation page Home-->
     </div>
 	<!--Affichage des dernières news + navigation-->
