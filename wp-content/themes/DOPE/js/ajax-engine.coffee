@@ -26,7 +26,9 @@ jQuery(document).ready ($) ->
 		return
 		
 	globalAnimationAfterLoading = () ->
+		console.log "out"
 		FB.XFBML.parse document.getElementById('entry-social-infos-single'), ->
+			console.log "in"
 			$('#loading').fadeOut 800
 		return
 	
@@ -100,8 +102,10 @@ jQuery(document).ready ($) ->
 						jSelector.dequeue()	
 						return
 					.queue(elementAnimationAfter(jSelector))		
-				return			
+				return
+		console.log $(selector).queue()	
 		$(selector).queue ->
+			console.log "in2"
 			globalAnimationAfterLoading()	
 			$(@).dequeue()
 			return
@@ -123,6 +127,7 @@ jQuery(document).ready ($) ->
 	showNextPage = (url) ->
 		$("#nav-below").find("a").remove()
 		$("#articles-loader").css('display', "inline-block")
+		history.pushState {pushStateActive: true}, '', url
 		$.get url, {ajaxOn: true}, (data) ->
 			try
 				tempDiv = $("<div>").html(data)
@@ -132,7 +137,11 @@ jQuery(document).ready ($) ->
 				return
 			tempDiv.find("h2").remove()
 			$("#content").find("#nav-below").remove()
-			$("#content").append(tempDiv.html())
+			$("#content").append(tempDiv.find("#content").html())
+			tempDiv.remove()
+		, 'html'
+		return
+
 	
 		
 	init_AJAX = (url) ->
@@ -169,6 +178,7 @@ jQuery(document).ready ($) ->
 			if isArticle(@href)
 				loadPage @href, true, '#content', '#articles-widgets', '#ajax-scripts'
 			else if isPagedLink(@href)
+				console.log "l"
 				showNextPage @href
 			else
 				loadPage @href, true, '#content', '#articles-widgets'

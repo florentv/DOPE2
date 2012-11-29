@@ -25,7 +25,9 @@
       $('#loading').fadeIn(800);
     };
     globalAnimationAfterLoading = function() {
+      console.log("out");
       FB.XFBML.parse(document.getElementById('entry-social-infos-single'), function() {
+        console.log("in");
         return $('#loading').fadeOut(800);
       });
     };
@@ -148,7 +150,9 @@
         selector = selectors[_i];
         _fn(selector);
       }
+      console.log($(selector).queue());
       $(selector).queue(function() {
+        console.log("in2");
         globalAnimationAfterLoading();
         $(this).dequeue();
       });
@@ -172,7 +176,10 @@
     showNextPage = function(url) {
       $("#nav-below").find("a").remove();
       $("#articles-loader").css('display', "inline-block");
-      return $.get(url, {
+      history.pushState({
+        pushStateActive: true
+      }, '', url);
+      $.get(url, {
         ajaxOn: true
       }, function(data) {
         var tempDiv;
@@ -185,8 +192,9 @@
         }
         tempDiv.find("h2").remove();
         $("#content").find("#nav-below").remove();
-        return $("#content").append(tempDiv.html());
-      });
+        $("#content").append(tempDiv.find("#content").html());
+        return tempDiv.remove();
+      }, 'html');
     };
     init_AJAX = function(url) {
       history.replaceState({
@@ -220,6 +228,7 @@
         if (isArticle(this.href)) {
           loadPage(this.href, true, '#content', '#articles-widgets', '#ajax-scripts');
         } else if (isPagedLink(this.href)) {
+          console.log("l");
           showNextPage(this.href);
         } else {
           loadPage(this.href, true, '#content', '#articles-widgets');
