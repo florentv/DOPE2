@@ -170,6 +170,8 @@
       }, 'html');
     };
     showNextPage = function(url) {
+      $("#nav-below").find("a").remove();
+      $("#articles-loader").css('display', "inline-block");
       return $.get(url, {
         ajaxOn: true
       }, function(data) {

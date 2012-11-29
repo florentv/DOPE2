@@ -764,7 +764,20 @@ h2 {
 	height:30px;
 	display:inline-block;
 }
-
+#nav-below {
+	display: block;
+	height: 30px;
+	background-color: red;
+	text-align: center;
+}
+#articles-loader {
+	display: none;
+	height: 20px;
+	width: 50px;
+	background: url("icons/ajax-loader.gif") no-repeat;
+	position: relative;
+	top: 10px;
+}
 /* @end */
 /* @group DOPE POPULAIRE */
 /*#dope-populaire-container li {

@@ -39,7 +39,7 @@
 		
 		<!--Navigation page Home-->
 			<?php global $wp_query; if ( $wp_query->max_num_pages != get_page_number() ) { ?>
-				<div id="nav-below" class="navigation"><?php echo get_next_posts_link("Articles précédents");?></div>
+				<div id="nav-below" class="navigation"><?php echo get_next_posts_link("Plus de d'articles");?><span id="articles-loader"></span></div>
 			<?php } else { ?>
 				<div id="no-more-posts">THE END</div>    	
 			<?php } ?>

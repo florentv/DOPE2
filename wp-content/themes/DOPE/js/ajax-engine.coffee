@@ -121,6 +121,8 @@ jQuery(document).ready ($) ->
 		return
 
 	showNextPage = (url) ->
+		$("#nav-below").find("a").remove()
+		$("#articles-loader").css('display', "inline-block")
 		$.get url, {ajaxOn: true}, (data) ->
 			try
 				tempDiv = $("<div>").html(data)
