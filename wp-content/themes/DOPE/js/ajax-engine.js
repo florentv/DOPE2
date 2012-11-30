@@ -50,14 +50,14 @@
       that = {};
       that.up = function() {
         return containerSelector.animate({
-          bottom: 640
+          bottom: 620
         }, {
           duration: animationTime
         });
       };
       that.down = function() {
         return containerSelector.animate({
-          bottom: 100
+          bottom: 0
         }, {
           duration: animationTime
         });
@@ -97,12 +97,12 @@
         state = newState;
         if (state) {
           spotlightSelector.animate({
-            bottom: 30,
+            bottom: -20,
             opacity: '1'
           }, {
             duration: animationTime
           }).animate({
-            bottom: 50
+            bottom: 0
           }, {
             duration: animationTime
           });
@@ -110,7 +110,7 @@
           return switchButton.down();
         } else {
           return spotlightSelector.animate({
-            bottom: 30
+            bottom: -20
           }, {
             duration: animationTime,
             complete: function() {
@@ -118,7 +118,7 @@
               return switchButton.up();
             }
           }).animate({
-            bottom: 640,
+            bottom: 620,
             opacity: '0'
           }, {
             duration: animationTime

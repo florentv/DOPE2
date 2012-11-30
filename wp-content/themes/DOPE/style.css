@@ -60,13 +60,18 @@ li {
 	background-color:#e3e3e3;
 }
 
+#main {
+	position: relative;
+	top: 70px;
+}
+
 #header {
 /*background: url(./images/wallpaper.png);*/
-	z-index:10;
-	position:relative;
-	bottom:10px;
-	padding-bottom:15px;
+	z-index:100;
+	position:fixed;
+	top: 0px;
 	padding-top:15px;
+	background-color:#e3e3e3;
 }
 
 #loading {
@@ -92,21 +97,17 @@ li {
 }
 
 #bar {
-	position: relative;
-	top:-10px;	
+	margin-top: 10px;
 }
 
 #bar-line {
-	height: 4px;
+	height: 3px;
 	width: 960px;
 	background-color: #323232;
-	margin-bottom: 15px;
 }
 
 #bar-arrow {
-	height: 20px;
-	width: 20px;
-	margin-left: 179px;
+
 }
 
 #wrapper {
@@ -115,10 +116,10 @@ li {
 }
 
 #spotlight {
-	margin-bottom:50px;
+	margin-bottom:30px;
 	padding:20px;
 	position:relative;
-	bottom:50px;
+	bottom:0px;
 }
 
 #spotlight-background {
@@ -161,7 +162,7 @@ li {
 	width:950px;
 	margin:auto;
 	position:relative;
-	bottom:100px;
+	bottom:0px;
 }
 
 #sidebar {
@@ -209,7 +210,7 @@ h2 {
 	border-radius:2px;
 	border:1px solid #888;
 	height:30px;
-	width:145px;
+	width:155px;
 	position:relative;
 	top:3px;
 	background-image:url(images/bg-search.png);
@@ -241,7 +242,7 @@ h2 {
 	padding:0;
 	top:35px;
 	text-align:left;
-	width:250px;
+	width:260px;
 	background-image:url(images/bg-search.png);
 	z-index:100;
 }
@@ -301,7 +302,7 @@ h2 {
 
 #main-menu > * {
 	display:inline-block;
-	margin-right:20px;
+	margin-right:18px;
 }
 
 #main-menu a {
@@ -767,7 +768,9 @@ h2 {
 #nav-below {
 	display: block;
 	height: 30px;
-	background-color: red;
+	border-radius:3px;
+	border:1px solid #909090;
+	background-image:url(images/bg-search.png);
 	text-align: center;
 }
 #articles-loader {

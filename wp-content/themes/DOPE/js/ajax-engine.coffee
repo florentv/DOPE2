@@ -43,9 +43,9 @@ jQuery(document).ready ($) ->
 	container = (containerSelector, animationTime) ->
 		that = {}
 		that.up = () ->
-			containerSelector.animate({bottom: 640}, {duration: animationTime})
+			containerSelector.animate({bottom: 620}, {duration: animationTime})
 		that.down = () ->
-			containerSelector.animate({bottom: 100}, {duration:animationTime})
+			containerSelector.animate({bottom: 0}, {duration:animationTime})
 		that.stop = () ->
 			containerSelector.stop()
 		return that
@@ -71,16 +71,16 @@ jQuery(document).ready ($) ->
 			switchButton.stop()
 			state = newState
 			if state
-				spotlightSelector.animate({bottom: 30, opacity: '1'}, {duration: animationTime})
-					.animate({bottom: 50},{duration: animationTime})
+				spotlightSelector.animate({bottom: -20, opacity: '1'}, {duration: animationTime})
+					.animate({bottom: 0},{duration: animationTime})
 				container.down()
 				switchButton.down()
 			else
-				spotlightSelector.animate({bottom: 30}, {duration: animationTime, complete: () ->
+				spotlightSelector.animate({bottom: -20}, {duration: animationTime, complete: () ->
 					container.up()
 					switchButton.up()
 					})
-					.animate({bottom: 640, opacity: '0'},{duration: animationTime})
+					.animate({bottom: 620, opacity: '0'},{duration: animationTime})
 		return that 
 	
 	renderPage = (content, selectors...) ->
