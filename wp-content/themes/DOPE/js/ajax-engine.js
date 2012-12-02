@@ -3,8 +3,8 @@
   var __slice = [].slice;
 
   jQuery(document).ready(function($) {
-    var container, containerView, elementAnimationAfter, elementAnimationBefore, globalAnimationAfterLoading, globalAnimationBeforeLoading, init_AJAX, isArticle, isIntern, isPagedLink, loadPage, newCommentTemplate, postComment, quickSearchArea, quickSearchElements, renderPage, root, searchTemplate, selected_result, spotlight, spotlightView, switchB, switchButton, themeRoot, xhrQuickSearch;
-    root = 'http://dope.net78.net/wordpress';
+    var container, containerView, elementAnimationAfter, elementAnimationBefore, globalAnimationAfterLoading, globalAnimationBeforeLoading, init_AJAX, isArticle, isIntern, isPagedLink, loadPage, newCommentTemplate, postComment, quickSearchArea, quickSearchElements, renderPage, root, searchTemplate, selected_result, showNextPage, spotlight, spotlightView, switchB, switchButton, themeRoot, xhrQuickSearch;
+    root = 'http://localhost:8888/test/wordpress';
     themeRoot = root + "/wp-content/themes/DOPE";
     selected_result = -1;
     quickSearchArea = $('#quicksearch-area');
@@ -25,7 +25,11 @@
       $('#loading').fadeIn(800);
     };
     globalAnimationAfterLoading = function() {
-      $('#loading').fadeOut(800);
+      console.log("out");
+      FB.XFBML.parse(document.getElementById('entry-social-infos-single'), function() {
+        console.log("in");
+        return $('#loading').fadeOut(800);
+      });
     };
     elementAnimationBefore = function(jSelector) {
       jSelector.animate({
@@ -46,14 +50,14 @@
       that = {};
       that.up = function() {
         return containerSelector.animate({
-          bottom: 640
+          bottom: 620
         }, {
           duration: animationTime
         });
       };
       that.down = function() {
         return containerSelector.animate({
-          bottom: 100
+          bottom: 0
         }, {
           duration: animationTime
         });
@@ -68,19 +72,9 @@
       that = {};
       icon = switchSelector.find('#spotlight-arrow');
       that.up = function() {
-        switchSelector.animate({
-          top: 00
-        }, {
-          duration: animationTime
-        });
         return icon.css('background', "url('" + themeRoot + "/icons/arrow-down.png') no-repeat");
       };
       that.down = function() {
-        switchSelector.animate({
-          top: 00
-        }, {
-          duration: animationTime
-        });
         return icon.css('background', "url('" + themeRoot + "/icons/arrow-up.png') no-repeat");
       };
       that.stop = function() {
@@ -103,12 +97,12 @@
         state = newState;
         if (state) {
           spotlightSelector.animate({
-            bottom: 30,
+            bottom: -20,
             opacity: '1'
           }, {
             duration: animationTime
           }).animate({
-            bottom: 50
+            bottom: 0
           }, {
             duration: animationTime
           });
@@ -116,7 +110,7 @@
           return switchButton.down();
         } else {
           return spotlightSelector.animate({
-            bottom: 30
+            bottom: -20
           }, {
             duration: animationTime,
             complete: function() {
@@ -124,7 +118,7 @@
               return switchButton.up();
             }
           }).animate({
-            bottom: 640,
+            bottom: 620,
             opacity: '0'
           }, {
             duration: animationTime
@@ -149,16 +143,16 @@
         jSelector = $(selector);
         jSelector.queue(elementAnimationBefore(jSelector)).queue(function() {
           jSelector.html(tempDiv.find(selector).html());
-          FB.XFBML.parse(document.getElementById('entry-social-infos-single'), function() {
-            jSelector.dequeue();
-          });
+          jSelector.dequeue();
         }).queue(elementAnimationAfter(jSelector));
       };
       for (_i = 0, _len = selectors.length; _i < _len; _i++) {
         selector = selectors[_i];
         _fn(selector);
       }
+      console.log($(selector).queue());
       $(selector).queue(function() {
+        console.log("in2");
         globalAnimationAfterLoading();
         $(this).dequeue();
       });
@@ -177,6 +171,29 @@
         ajaxOn: true
       }, function(data) {
         renderPage.apply(null, [data].concat(__slice.call(selectors)));
+      }, 'html');
+    };
+    showNextPage = function(url) {
+      $("#nav-below").find("a").remove();
+      $("#articles-loader").css('display', "inline-block");
+      history.pushState({
+        pushStateActive: true
+      }, '', url);
+      $.get(url, {
+        ajaxOn: true
+      }, function(data) {
+        var tempDiv;
+        try {
+          tempDiv = $("<div>").html(data);
+        } catch (e) {
+          location.href = document.URL;
+          console.log("get the targeted URL failed");
+          return;
+        }
+        tempDiv.find("h2").remove();
+        $("#content").find("#nav-below").remove();
+        $("#content").append(tempDiv.find("#content").html());
+        return tempDiv.remove();
       }, 'html');
     };
     init_AJAX = function(url) {
@@ -208,8 +225,14 @@
     $('body').on('click', 'a', function(event) {
       if (isIntern(this.href)) {
         event.preventDefault();
-        loadPage(this.href, true, '#content', '#articles-widgets', '#ajax-scripts');
-        spotlightView.toggleState(false);
+        if (isArticle(this.href)) {
+          loadPage(this.href, true, '#content', '#articles-widgets', '#ajax-scripts');
+        } else if (isPagedLink(this.href)) {
+          console.log("l");
+          showNextPage(this.href);
+        } else {
+          loadPage(this.href, true, '#content', '#articles-widgets');
+        }
       }
     });
     $('body').on('submit', 'form', function(event) {

@@ -26,7 +26,10 @@ jQuery(document).ready ($) ->
 		return
 		
 	globalAnimationAfterLoading = () ->
-		$('#loading').fadeOut 800
+		console.log "out"
+		FB.XFBML.parse document.getElementById('entry-social-infos-single'), ->
+			console.log "in"
+			$('#loading').fadeOut 800
 		return
 	
 	elementAnimationBefore = (jSelector) ->
@@ -40,9 +43,9 @@ jQuery(document).ready ($) ->
 	container = (containerSelector, animationTime) ->
 		that = {}
 		that.up = () ->
-			containerSelector.animate({bottom: 640}, {duration: animationTime})
+			containerSelector.animate({bottom: 620}, {duration: animationTime})
 		that.down = () ->
-			containerSelector.animate({bottom: 100}, {duration:animationTime})
+			containerSelector.animate({bottom: 0}, {duration:animationTime})
 		that.stop = () ->
 			containerSelector.stop()
 		return that
@@ -51,10 +54,8 @@ jQuery(document).ready ($) ->
 		that = {}
 		icon = switchSelector.find('#spotlight-arrow')
 		that.up = () ->
-			switchSelector.animate({top: -10}, {duration: animationTime})
 			icon.css('background', "url('#{themeRoot}/icons/arrow-down.png') no-repeat")
 		that.down = () ->
-			switchSelector.animate({top: 32}, {duration: animationTime})
 			icon.css('background', "url('#{themeRoot}/icons/arrow-up.png') no-repeat")
 		that.stop = () ->
 			switchSelector.stop()
@@ -70,16 +71,16 @@ jQuery(document).ready ($) ->
 			switchButton.stop()
 			state = newState
 			if state
-				spotlightSelector.animate({bottom: 30, opacity: '1'}, {duration: animationTime})
-					.animate({bottom: 50},{duration: animationTime})
+				spotlightSelector.animate({bottom: -20, opacity: '1'}, {duration: animationTime})
+					.animate({bottom: 0},{duration: animationTime})
 				container.down()
 				switchButton.down()
 			else
-				spotlightSelector.animate({bottom: 30}, {duration: animationTime, complete: () ->
+				spotlightSelector.animate({bottom: -20}, {duration: animationTime, complete: () ->
 					container.up()
 					switchButton.up()
 					})
-					.animate({bottom: 640, opacity: '0'},{duration: animationTime})
+					.animate({bottom: 620, opacity: '0'},{duration: animationTime})
 		return that 
 	
 	renderPage = (content, selectors...) ->
@@ -98,13 +99,13 @@ jQuery(document).ready ($) ->
 					.queue(elementAnimationBefore(jSelector))
 					.queue () -> 
 						jSelector.html(tempDiv.find(selector).html())
-						FB.XFBML.parse document.getElementById('entry-social-infos-single'), ->
-							jSelector.dequeue()
-							return	
+						jSelector.dequeue()	
 						return
 					.queue(elementAnimationAfter(jSelector))		
-				return			
+				return
+		console.log $(selector).queue()	
 		$(selector).queue ->
+			console.log "in2"
 			globalAnimationAfterLoading()	
 			$(@).dequeue()
 			return
@@ -122,6 +123,26 @@ jQuery(document).ready ($) ->
 			return
 		, 'html'
 		return
+
+	showNextPage = (url) ->
+		$("#nav-below").find("a").remove()
+		$("#articles-loader").css('display', "inline-block")
+		history.pushState {pushStateActive: true}, '', url
+		$.get url, {ajaxOn: true}, (data) ->
+			try
+				tempDiv = $("<div>").html(data)
+			catch e
+				location.href = document.URL
+				console.log "get the targeted URL failed"
+				return
+			tempDiv.find("h2").remove()
+			$("#content").find("#nav-below").remove()
+			$("#content").append(tempDiv.find("#content").html())
+			tempDiv.remove()
+		, 'html'
+		return
+
+	
 		
 	init_AJAX = (url) ->
 		history.replaceState({pushStateActive: true}, 'first page', document.URL)
@@ -154,8 +175,14 @@ jQuery(document).ready ($) ->
 	$('body').on 'click', 'a', (event) ->
 		if isIntern @href
 			event.preventDefault()
-			loadPage @href, true, '#content', '#articles-widgets', '#ajax-scripts'
-			spotlightView.toggleState(false)
+			if isArticle(@href)
+				loadPage @href, true, '#content', '#articles-widgets', '#ajax-scripts'
+			else if isPagedLink(@href)
+				console.log "l"
+				showNextPage @href
+			else
+				loadPage @href, true, '#content', '#articles-widgets'
+
 			return
 			
 	$('body').on 'submit', 'form', (event) ->

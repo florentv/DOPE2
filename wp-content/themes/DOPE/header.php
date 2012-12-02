@@ -86,7 +86,7 @@ else { bloginfo('name'); wp_title('|'); }
         </div><!-- #masthead -->
         
         <div id="bar">
-        	<img id="bar-arrow" src="http://dope.net78.net/wordpress/wp-content/themes/DOPE/images/arrow.png">
+        	<!-- <img id="bar-arrow" src="http://dope.net78.net/wordpress/wp-content/themes/DOPE/images/arrow.png"> -->
 	        <div id="bar-line">
 	        </div>
         </div>
