@@ -50,6 +50,7 @@ else { bloginfo('name'); wp_title('|'); }
 <div id="loading"><img src="<?php echo home_url().'/wp-content/themes/DOPE/images/ajax-loader.gif'?>" alt="load" /></div>
 <div id="wrapper" class="hfeed">
     <div id="header">
+        <div id="header-background">
         <div id="masthead">
 
             <div id="branding">
@@ -90,7 +91,7 @@ else { bloginfo('name'); wp_title('|'); }
 	        <div id="bar-line">
 	        </div>
         </div>
-        
+        </div>
     </div><!-- #header -->
 
     <div id="main">

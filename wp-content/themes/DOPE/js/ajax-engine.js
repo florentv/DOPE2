@@ -12,6 +12,13 @@
     xhrQuickSearch = 0;
     searchTemplate = $('#quicksearch-template').html();
     newCommentTemplate = $('#new-comment-template').html();
+    $(window).on('scroll', function() {
+      if ($(window).scrollTop() > 100) {
+        return $("#header-background").css("background-color", "rgba(227, 227, 227, 0.7)");
+      } else {
+        return $("#header-background").css("background-color", "rgba(227, 227, 227, 1)");
+      }
+    });
     isArticle = function(url) {
       return !/wordpress\/(?:category|page|$){1}/.test(url);
     };

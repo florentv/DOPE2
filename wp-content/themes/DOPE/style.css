@@ -70,8 +70,13 @@ li {
 	z-index:100;
 	position:fixed;
 	top: 0px;
+	background-image:url(images/bg-search.png);
+
+}
+
+#header-background {
 	padding-top:15px;
-	background-color:#e3e3e3;
+	background-color: rgba(227,227,227,1);
 }
 
 #loading {

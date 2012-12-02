@@ -10,7 +10,11 @@ jQuery(document).ready ($) ->
 	searchTemplate = $('#quicksearch-template').html()
 	newCommentTemplate = $('#new-comment-template').html()
 	
-	
+	$(window).on 'scroll', () ->
+		if $(window).scrollTop() > 100
+			$("#header-background").css("background-color", "rgba(227, 227, 227, 0.7)")
+		else
+			$("#header-background").css("background-color", "rgba(227, 227, 227, 1)")
 #Functions
 	isArticle = (url) ->
 		not /wordpress\/(?:category|page|$){1}/.test(url)
