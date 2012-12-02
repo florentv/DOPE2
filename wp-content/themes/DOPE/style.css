@@ -377,11 +377,13 @@ h2 {
 /* @group SPOTLIGHT */
 /* @group SLIDESHOW */
 #slideshow {
-	width:700px;
+	width:640px;
+	height: 300px;
 	margin:auto;
 	z-index:1;
 	position:relative;
 	left:30px;
+	box-shadow: 0 0 8px -3px #656565;
 }
 
 .slideshow-text {
@@ -425,8 +427,8 @@ h2 {
 	width:60px;
 	height:300px;
 	background-color:#5a5a5a;
-	position:relative;
-	left:-60px;
+	position:absolute;
+	left:580px;
 	z-index:1;
 }
 
