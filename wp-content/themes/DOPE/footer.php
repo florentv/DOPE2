@@ -15,6 +15,14 @@
  <?php wp_footer(); ?>
 <div id='test-zone'></div>
 </body>
+<div id='dopePlayer' style="display: none;height: 300px; overflow:scroll;z-index:100;position:fixed;bottom: 10px;">
+  <button id="previous-player">Previous</button>
+  <button id="next-player">Next</button>
+  <button id="play-player">Play</button>
+  <span id="song-position"></span> : <span id="song-duration"></span>
+  <ul id="song-list"></ul>
+  <button id="more-songs" style="display:none">more</button>
+</div>
 <div id="fb-root"></div>
 <!--SCRIPTS LOAD-->
 <div id="no-ajax-scripts">
@@ -26,6 +34,11 @@
 		</a>
 	</li>
 	</script>
+  <script id="song-template" type="text/template">
+  <li class="song" data-track-id={{{song_id}}}>
+      <img width="40" height="40" src="{{{artwork}}}" class="attachment-little wp-post-image"/> <span>{{{artist}}} {{{title}}}</span>
+  </li>
+  </script>
 </div>
 <?php } ?>
 <div id="ajax-scripts">

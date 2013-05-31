@@ -4,7 +4,7 @@
 	<!--SLIDESHOW-->
 	<div id="slideshow" style="visibility: hidden;">
 		<?php
-		$args = array( 'numberposts' => 5, 'category' => 49, 'orderby' => 'post_date', 'order' => 'DESC');
+		$args = array( 'numberposts' => 5, 'category' => 2057, 'orderby' => 'post_date', 'order' => 'DESC');
 		$the_posts = get_posts($args);	
 		$vignettes = ''; ?>	
 		<div id="slideshow-content"><?php

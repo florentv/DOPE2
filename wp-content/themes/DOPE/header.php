@@ -28,14 +28,8 @@ else { bloginfo('name'); wp_title('|'); }
 	<link rel="stylesheet" type="text/css" href="<?php bloginfo('stylesheet_url'); ?>" />
 <!--	SCRIPTS LOAD-->
 <?php
-    wp_enqueue_script('jquery',"//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js",array(),false,true);
-  //  wp_enqueue_script('jquery',get_template_directory_uri() . '/js/jquery-min.js',array(),false,true);
-    wp_enqueue_script('cycle',get_template_directory_uri() . '/js/jquery.cycle.js',array('jquery'),false,true);
-    wp_enqueue_script('slideshow',get_template_directory_uri() . '/js/slideshow.js',array('cycle'),false,true);
-    wp_enqueue_script('dope-populaire',get_template_directory_uri() . '/js/dope-populaire.js',array('cycle'),false,true);
-    wp_enqueue_script('mustache',get_template_directory_uri() . '/js/mustache.js',array(),false,true);
-    wp_enqueue_script('ajax-engine',get_template_directory_uri() . '/js/ajax-engine.js',array('jquery', 'mustache'),false,true);
-    wp_enqueue_script('menu',get_template_directory_uri() . '/js/menu.js',array(),false,true);
+    wp_enqueue_script('main',get_template_directory_uri() . '/js/main.js',array('jquery'),false,true);
+    //wp_enqueue_script('menu',get_template_directory_uri() . '/js/menu.js',array(),false,true);
  
 ?>
 <!--	SCRIPTS LOAD-->

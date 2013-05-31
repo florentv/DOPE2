@@ -26,11 +26,11 @@
 					<div class="entry-social-infos">
 						<span class="nb-fb-likes">
 							<div class="fb-icon"></div>
-							<?php echo get_FBlikes('http://www.dealerofpeopleemotions.com/wordpress/actu/alt-j-%E2%88%86-fitzpleasure-something-good-videos');//echo get_FBlikes(get_permalink()); ?>
+							<?php echo 20//echo get_FBlikes(get_permalink()); ?>
 						</span>
 						<span class="nb-tweets">
 							<div class="tweet-icon"></div>
-							<?php echo get_Tweets('http://www.dealerofpeopleemotions.com/wordpress/actu/alt-j-%E2%88%86-fitzpleasure-something-good-videos');//echo get_Tweets(get_permalink()); ?>
+							<?php echo 10//echo get_Tweets(get_permalink()); ?>
 						</span>
 					</div>
 				</div>
