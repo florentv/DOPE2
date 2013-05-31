@@ -10,6 +10,10 @@ $locale_file = TEMPLATEPATH . "/languages/$locale.php";
 if ( is_readable($locale_file) )
 	require_once($locale_file);
 
+// newer version of jquery than wordpress default one
+//wp_deregister_script('jquery');
+//wp_register_script('jquery','http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', false, '');
+//wp_enqueue_script('jquery');
 // Récupère le numéro de la page courante
 function get_page_number() {
 	return (get_query_var('paged')) ? get_query_var('paged') : 1;
@@ -52,6 +56,7 @@ if ( isset( $_GET['activated'] ) ) {
 	update_option( 'sidebars_widgets', $preset_widgets );
 }
 // update_option( 'sidebars_widgets', NULL );
+
 
 // Check for static widgets in widget-ready areas
 function is_sidebar_active( $index ){
@@ -143,13 +148,13 @@ function Twitter_followers() {
 }
 
 function the_hashtag(){
-	if (in_category(8)){
+	if (in_category(9)){
 		return '#DopeSelection';
-	} elseif (in_category(9)) {
+	} elseif (in_category(971)) {
 		return '#DopeTape';
-	} elseif (in_category(7)) {
+	} elseif (in_category(8)) {
 		return '#DopedelaSemaine';
-	} elseif (in_category(6)) {
+	} elseif (in_category(662)) {
 		return '#CinqMinutesAvec';
 	} elseif (in_category(14)) {
 		return '#DopeVieilleries';
@@ -211,6 +216,183 @@ function quicksearch() {
 	echo (count($response) != 0) ? json_encode($response) : false;
 	exit;
 }
+
+// ------------------------------------------------ DOPE AUDIO SPECIFIC-------------------------------------------------
+function insertAudioPlayerButton($form_fields, $post) {
+			global $wp_version;
+			$file = wp_get_attachment_url($post->ID);
+			if ($post->post_mime_type == 'audio/mpeg') {
+				$form_fields["url"]["html"] .= "<button type='button' class='button urlaudioplayer audio-player-" . $post->ID . "' data-link-url='[audio:" . attribute_escape($file) . "]' title='[audio:" . attribute_escape($file) . "]'>Audio Player</button>";
+				if (version_compare($wp_version, "2.7", "<")) {
+					$form_fields["url"]["html"] .= "<script type='text/javascript'>
+					jQuery('button.audio-player-" . $post->ID . "').bind('click', function(){jQuery(this).siblings('input').val(this.value);});
+					</script>\n";
+				}
+			}
+			return $form_fields;
+		}
+
+add_filter("the_content", "processContent", 0);
+function processContent($content){
+	$pattern = "/(<p>)?\[audio:(([^]]+))\](<\/p>)?/i";
+	$content = preg_replace_callback($pattern, "insertPlayer", $content);
+	return $content;
+}
+
+function insertPlayer($found) {
+	$found = preg_split("/[\|]/", $found[3]);
+	return "<p><audio src='". $found[0] ."' preload='none' controls></audio>PLAYER INSERTED HERE</p>";
+}
+
+add_action( 'wp_ajax_nopriv_get_last_songs', 'get_last_songs' );
+add_action( 'wp_ajax_get_last_songs', 'get_last_songs' );
+function get_last_songs()
+{
+ $count = ($_GET['count']) ? $_GET['count'] : 10 ;
+ $index = ($_GET['index']) ? $_GET['index'] : 0;
+ $random = ($_GET['random']) ? $_GET['random'] : false;
+ $wpdb = $GLOBALS['wpdb'];
+ if ($random)
+ {
+ 	$query = "SELECT song_id, post_id, title, artist, link FROM  wp_dope_songs ORDER BY RAND() LIMIT %d";
+ 	$query = $wpdb->prepare($query, $count);
+ } else {
+ 	$query = "SELECT song_id, post_id, title, artist, link FROM wp_dope_songs ORDER BY post_id DESC LIMIT %d, %d";
+ 	$query = $wpdb->prepare($query, $index, $count);
+ }
+ $response = $wpdb->get_results($query, ARRAY_A);
+ foreach ($response as $key => $row) {
+ 	$response[$key]['artwork'] = wp_get_attachment_image_src(get_post_thumbnail_id($row['post_id']), 'little');
+ 	$response[$key]['artwork'] = $response[$key]['artwork'][0];
+ }
+ header( "Content-Type: application/json" );
+ echo json_encode($response);
+ die();
+}
+
+add_action( 'wp_ajax_nopriv_get_songs_by_urls', 'get_songs_by_urls' );
+add_action( 'wp_ajax_get_songs_by_urls', 'get_songs_by_urls' );
+function get_songs_by_urls()
+{
+	$url = explode(',', $_GET['song_urls']);
+	$result = get_dope_song_by_url($url);
+	header( "Content-Type: application/json" );
+	echo json_encode($result);
+	die();
+}
+
+function get_dope_song_by_url($urls)
+{
+ $wpdb = $GLOBALS['wpdb'];
+ $in = "(%s".str_repeat(",%s", count($urls)-1).")";
+ $result = array();
+ $query = "SELECT song_id, post_id, title, artist, link FROM wp_dope_songs WHERE link IN " . $in;
+ $query = $wpdb->prepare($query, $urls);
+ $response = $wpdb->get_results($query, ARRAY_A);
+ foreach ($response as $key => $row) {
+ 	$response[$key]['artwork'] = wp_get_attachment_image_src(get_post_thumbnail_id($row['post_id']), 'little');
+ 	$response[$key]['artwork'] = $response[$key]['artwork'][0];
+ }
+ return $response;
+}
+
+function get_audio_attachment_info($id) {
+ $wpdb = $GLOBALS['wpdb'];
+ $query = "SELECT ID, post_title, post_parent, guid, post_mime_type FROM wp_posts WHERE ID = %d";
+ $query = $wpdb->prepare($query, $id);
+ $response = $wpdb->get_results($query);
+ if (count($response) == 1 and $response[0]->post_mime_type == 'audio/mpeg') {
+ 	$track = $response[0];
+ 	if (strpos($track->post_title, '|')) {
+ 		$artist = strtok($track->post_title, '|');
+ 		$title = strtok('|');
+ 	} else {
+ 		$artist = '';
+ 		$title = '';
+ 	}
+ 	return array('ID' => $track->ID, 'post_parent' => $track->post_parent, 'guid' => $track->guid, 'artist' => $artist, 'title' => $title);
+ }
+ return false; //is not an audio/mpeg
+}
+ 
+function wp_dope_songs_add($post_id, $title, $artist, $link, $attachment_id=0) {
+	$wpdb = $GLOBALS['wpdb'];
+	$query = "INSERT INTO wp_dope_songs (attachment_id, post_id, link, artist, title) VALUES (%d, %d, %s, %s, %s) ON DUPLICATE KEY UPDATE song_id = song_id";
+	$query = $wpdb->prepare($query, $attachment_id, $post_id, $link, $artist, $title);
+	return $wpdb->query($query);
+}
+
+function add_dope_song($id){
+	$wpdb = $GLOBALS['wpdb'];
+	$track_info = get_audio_attachment_info($id);
+	if ($track_info) {
+ 		wp_dope_songs_add($track_info['post_parent'], $track_info['title'], $track_info['artist'], $track_info['guid'], $track_info['ID']);
+	}
+}
+
+function edit_dope_song($id){
+	$wpdb = $GLOBALS['wpdb'];
+	$track_info = get_audio_attachment_info($id);
+	if ($track_info) {
+		$query = "UPDATE wp_dope_songs SET post_id = %d, link = %s, artist = %s, title = %s WHERE attachment_id = %d";
+ 		$query = $wpdb->prepare($query, $track_info['post_parent'], $track_info['guid'], $track_info['artist'], $track_info['title'], $track_info['ID']);
+ 		$wpdb->query($query);
+	}
+}
+
+function delete_dope_song($id) {
+	$wpdb = $GLOBALS['wpdb'];
+	$track_info = get_audio_attachment_info($id);
+	if ($track_info) {
+		$query = "DELETE FROM wp_dope_songs WHERE attachment_id = %d";
+ 		$query = $wpdb->prepare($query, $track_info['ID']);
+ 		$wpdb->query($query);
+	}
+}
+
+function add_soundcloud_songs($html, $id) {
+	$dom = new DOMDocument();
+	$dom->loadHTML($html);
+	$frames = $dom->getElementsByTagName('iframe');
+	foreach ($frames as $frame) {
+		$src = $frame->attributes->getNamedItem("src");
+		if ($src and strpos($src->nodeValue, 'soundcloud.com/player'))
+		{
+			$src = $src->nodeValue;
+			$start = strpos($src, 'url=') + 4;
+			$end = strpos($src, '&', $start);
+			$src = ($end) ? urldecode(substr($src, $start, $end - $start)) : urldecode(substr($src, $start)) ;
+			$meta_data = curl_JSON($src . '?consumer_key=e131d43ea19f0f7936ed08ad219a015d&format=json', true);
+			if ($meta_data['kind'] == 'track') {
+				wp_dope_songs_add($id, $meta_data['title'], $meta_data['user']['username'], $meta_data['stream_url']);
+			} else if ($meta_data['kind'] == 'playlist') {
+				foreach ($meta_data['tracks'] as $track) {
+					wp_dope_songs_add($id, $track['title'], $track['user']['username'], $track['stream_url']);
+				}
+			}
+		}
+	}
+}	
+
+function parse_post_content($id){
+	$html = get_post($id);
+	$html = $html->post_content;
+	add_soundcloud_songs(html_entity_decode($html), $id);
+}
+add_action('edit_post', 'parse_post_content');
+add_filter("attachment_fields_to_edit", "insertAudioPlayerButton", 10, 2);
+add_action('add_attachment', 'add_dope_song');
+add_action('edit_attachment', 'edit_dope_song');
+add_action('delete_attachment', 'delete_dope_song');
+
+//WARNING : to activate ONCE to add all soundcloud songs in posts to wp_dope_songs
+/*$wpdb = $GLOBALS['wpdb'];
+$r = $wpdb->get_results("SELECT `ID` FROM `wp_posts` WHERE `post_type` = 'post' AND `post_status` = 'publish'");
+foreach ($r as $key => $value) {
+ 	do_action('edit_post', $value->ID);
+ }*/
+
+// --------------------------------------------------------------------------------------------------------------------
 
 //Fonctions pour les commentaires
 function custom_comments($comment, $args, $depth) {
