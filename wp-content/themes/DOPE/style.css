@@ -33,7 +33,7 @@ Menu text :
 */
 /* @group MAIN CONTAINERS */
 body {
-	font-family:'Open sans',Helvetica,Arial,Geneva,sans-serif;
+	font-family:Lucida,Helvetica,Arial,Geneva,sans-serif;
 }
 
 p {
@@ -189,7 +189,7 @@ h2 {
 	background-color:#232323;
 	color:#fff;
 	margin-top:0;
-	font-family:"Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;
+	font-family: Lucida, "Helvetica Neue",Arial,Helvetica,Geneva,sans-serif;
 	text-transform:uppercase;
 }
 
@@ -858,7 +858,7 @@ background: url(http://www.welcomebrand.co.uk/wp-content/themes/welcomebrand-vin
 .post-artist {
 	font-size:24px;
 	color:#232323;
-	font-family:'Helvetica Neue';
+	font-family: Lucida, 'Helvetica Neue';
 	text-transform:uppercase;
 	font-weight:100;
 }
@@ -866,21 +866,21 @@ background: url(http://www.welcomebrand.co.uk/wp-content/themes/welcomebrand-vin
 .post-song {
 	font-size:24px;
 	color:#232323;
-	font-family:'Helvetica Neue';
+	font-family:Lucida, 'Helvetica Neue';
 	font-weight:100;
 }
 
 #sidebar .post-song {
 	font-size:1em;
 	color:#232323;
-	font-family:'Helvetica Neue';
+	font-family:Lucida, 'Helvetica Neue';
 	font-weight:100;	
 }
 
 #sidebar .post-artist {
 	font-size:1em;
 	color:#232323;
-	font-family:'Helvetica Neue';
+	font-family:Lucida, 'Helvetica Neue';
 	font-weight:100;	
 }
 
