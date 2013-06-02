@@ -40,7 +40,6 @@ jQuery(document).ready(function($){
 		    AjaxEngine.appendNextPage(targetUrl, "#nav-below");
 		  } else {
 		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets']);
-		    AudioParser.getLastSongs(10, 0, false);
 		  }
 		}
 	});
@@ -102,10 +101,18 @@ jQuery(document).ready(function($){
     	console.log(newSong);
     	Playlist.addSong(Song(newSong));
   	});
-		AjaxEngine.onLoadPage(function(){
-			//$("#song-list").html('');
-			//Playlist.clearSongs();
-			AudioParser.getAudioMedia();
+		AjaxEngine.onLoadPage(function(url){
+			$("#song-list").html('');
+			Playlist.clearSongs();
+			if (AjaxEngine.isArticle(url))
+			{
+				AudioParser.getAudioMedia();
+				$('#more-songs').css('display', 'none');
+			} else
+			{
+				AudioParser.getLastSongs(10, 0, false);
+				$('#more-songs').css('display', 'block');
+			}
 		});
 
 	  AudioParser.getAudioMedia();
@@ -143,6 +150,9 @@ jQuery(document).ready(function($){
 				Player.play(nextSong.id);
 			}
 		}
+	});
+	$('#more-songs').on('click', function(e){
+		AudioParser.getLastSongs(10, Playlist.songs.length, false);
 	});
 
 

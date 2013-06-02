@@ -41,6 +41,7 @@ jQuery(document).ready(function($){
 		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
+		  console.log(newHtml.find(selector).html());
 		  jSelector.queue(elementAnimationBefore(jSelector))
 		       .queue(function(){
 		                    jSelector.html(newHtml.find(selector).html());
@@ -67,9 +68,7 @@ jQuery(document).ready(function($){
 		  lastSelector = $(selectors.pop());
 		  lastSelector.queue(function(){
 		    globalAnimationAfterLoading();
-		    forEach(onLoadCallbacks, function(i, callback){
-		      callback();
-		    },this);
+			doCallbacks(document.URL);
 		    lastSelector.dequeue(); //
 		    });
 		  tmpDiv.remove();
@@ -87,6 +86,13 @@ jQuery(document).ready(function($){
 		//
 		function onLoadPage(callback){
 		  onLoadCallbacks.push(callback);
+		}
+		//
+		function doCallbacks(url)
+		{
+			forEach(onLoadCallbacks, function(i, callback){
+		      callback(url);
+		    },this);
 		}
 		//
 		function appendNextPage(nextPageUrl, navButtonSelector){

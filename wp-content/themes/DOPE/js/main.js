@@ -6460,6 +6460,7 @@ jQuery(document).ready(function($){
 		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
+		  console.log(newHtml.find(selector).html());
 		  jSelector.queue(elementAnimationBefore(jSelector))
 		       .queue(function(){
 		                    jSelector.html(newHtml.find(selector).html());
@@ -6486,7 +6487,7 @@ jQuery(document).ready(function($){
 		  lastSelector = $(selectors.pop());
 		  lastSelector.queue(function(){
 		    globalAnimationAfterLoading();
-				doCallbacks(document.URL);
+			doCallbacks(document.URL);
 		    lastSelector.dequeue(); //
 		    });
 		  tmpDiv.remove();
@@ -6506,10 +6507,11 @@ jQuery(document).ready(function($){
 		  onLoadCallbacks.push(callback);
 		}
 		//
-		function doCallbacks(currentURL){
+		function doCallbacks(url)
+		{
 			forEach(onLoadCallbacks, function(i, callback){
-		      callback(currentURL);
-		  },this);
+		      callback(url);
+		    },this);
 		}
 		//
 		function appendNextPage(nextPageUrl, navButtonSelector){
@@ -6541,7 +6543,6 @@ jQuery(document).ready(function($){
 		      loadPage(document.URL, false, ["#content", "#articles-widgets", "#ajax-scripts"]);
 		    }
 		  }
-		  doCallbacks(document.URL);
 		}
 		//
 		function postComment(formSelector) {
@@ -8648,6 +8649,7 @@ jQuery(document).ready(function($){
 			songPosition.html(durationToString(song.position/1000).join("."));
 	  };
 	  AudioParser.onNewSong(function(newSong){
+    	console.log(newSong);
     	Playlist.addSong(Song(newSong));
   	});
 		AjaxEngine.onLoadPage(function(url){
@@ -8656,14 +8658,15 @@ jQuery(document).ready(function($){
 			if (AjaxEngine.isArticle(url))
 			{
 				AudioParser.getAudioMedia();
-				$("#more-songs").css('display', 'none');
+				$('#more-songs').css('display', 'none');
 			} else
 			{
-				AudioParser.getLastSongs(10, 0);
-				$("#more-songs").css('display', 'block');
+				AudioParser.getLastSongs(10, 0, false);
+				$('#more-songs').css('display', 'block');
 			}
 		});
 
+	  AudioParser.getAudioMedia();
 	 });
 
 
@@ -8700,7 +8703,7 @@ jQuery(document).ready(function($){
 		}
 	});
 	$('#more-songs').on('click', function(e){
-		AudioParser.getLastSongs(10, Playlist.songs.length);
+		AudioParser.getLastSongs(10, Playlist.songs.length, false);
 	});
 
 
