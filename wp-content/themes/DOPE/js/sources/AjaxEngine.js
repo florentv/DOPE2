@@ -41,7 +41,7 @@ jQuery(document).ready(function($){
 		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
-		  console.log(newHtml.find(selector).html());
+		  //console.log(newHtml.html());
 		  jSelector.queue(elementAnimationBefore(jSelector))
 		       .queue(function(){
 		                    jSelector.html(newHtml.find(selector).html());
@@ -61,6 +61,7 @@ jQuery(document).ready(function($){
 		    return;
 		  }
 		  document.title = tmpDiv.find('title').html();
+		  $("meta").remove();
 		  forEach(selectors, function(i, selector){
 		    updateElement(selector, tmpDiv);
 		  },this);
