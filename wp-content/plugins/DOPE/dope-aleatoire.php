@@ -7,7 +7,6 @@ Author: J-Loup
 Version: 1
 */
  
- 
 class DopeAleatoireWidget extends WP_Widget
 {
   function DopeAleatoireWidget()
@@ -39,7 +38,6 @@ class DopeAleatoireWidget extends WP_Widget
   function widget($args, $instance)
   {
     extract($args, EXTR_SKIP);
- 
     echo $before_widget;
     $title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
     $titleLength = empty($instance['titleLength']) ? 20 : $instance['titleLength'];
@@ -47,7 +45,7 @@ class DopeAleatoireWidget extends WP_Widget
     if (!empty($title))
       echo $before_title . $title . $after_title;?>
  
-  <ul id="dope-aleatoire-content">
+	<ul id="dope-aleatoire-content">
   <?php $args = array( 'numberposts' => 1, 'orderby' => 'rand');
   $the_posts = get_posts($args);
   foreach ($the_posts as $the_post) { ?>

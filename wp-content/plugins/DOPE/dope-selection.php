@@ -59,6 +59,7 @@ class DopeSelection extends WP_Widget
  
   function widget($args, $instance)
   {
+   if (!isset($_GET['ajaxOn']) && !($_GET['ajaxOn'] == true)) {
     extract($args, EXTR_SKIP);
  	$articleTitle = $instance['articleTitle'];
  	$permalink = $instance['permalink'];
@@ -71,6 +72,7 @@ class DopeSelection extends WP_Widget
       echo '<a href="'. $permalink .'">'. $thumbnail .'</a>';
   
     echo $after_widget;
+   }
   }
  
 }

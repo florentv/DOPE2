@@ -38,6 +38,7 @@ class GoogleCalendarDopeWidget extends WP_Widget
  
   function widget($args, $instance)
   {
+   if (!isset($_GET['ajaxOn']) && !($_GET['ajaxOn'] == true)) {
     extract($args, EXTR_SKIP);
  	$title = empty($instance['title']) ? ' ' : apply_filters('widget_title', $instance['title']);
  	$count = empty($instance['count']) ? 5 : $instance['count'];
@@ -72,7 +73,7 @@ class GoogleCalendarDopeWidget extends WP_Widget
      	echo 'Pas de connexion aux serveurs Google' ;
     }
   	  echo $after_widget;
- 
+  	 }
   }
  
 }

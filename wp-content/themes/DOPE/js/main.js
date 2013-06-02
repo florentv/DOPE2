@@ -6460,7 +6460,7 @@ jQuery(document).ready(function($){
 		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
-		  console.log(newHtml.find(selector).html());
+		  //console.log(newHtml.html());
 		  jSelector.queue(elementAnimationBefore(jSelector))
 		       .queue(function(){
 		                    jSelector.html(newHtml.find(selector).html());
@@ -6480,6 +6480,7 @@ jQuery(document).ready(function($){
 		    return;
 		  }
 		  document.title = tmpDiv.find('title').html();
+		  $("meta").remove();
 		  forEach(selectors, function(i, selector){
 		    updateElement(selector, tmpDiv);
 		  },this);
@@ -8586,11 +8587,11 @@ jQuery(document).ready(function($){
 		if (AjaxEngine.isIntern(targetUrl)) {
 		  e.preventDefault();
 		  if (AjaxEngine.isArticle(targetUrl)) {
-		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', '#ajax-scripts']);
+		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
 		  } else if (AjaxEngine.isPagedLink(targetUrl)) {
 		    AjaxEngine.appendNextPage(targetUrl, "#nav-below");
 		  } else {
-		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets']);
+		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content"]);
 		  }
 		}
 	});

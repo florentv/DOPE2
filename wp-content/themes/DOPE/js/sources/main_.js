@@ -35,11 +35,11 @@ jQuery(document).ready(function($){
 		if (AjaxEngine.isIntern(targetUrl)) {
 		  e.preventDefault();
 		  if (AjaxEngine.isArticle(targetUrl)) {
-		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', '#ajax-scripts']);
+		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
 		  } else if (AjaxEngine.isPagedLink(targetUrl)) {
 		    AjaxEngine.appendNextPage(targetUrl, "#nav-below");
 		  } else {
-		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets']);
+		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content"]);
 		  }
 		}
 	});

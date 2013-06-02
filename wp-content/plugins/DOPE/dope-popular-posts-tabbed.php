@@ -38,6 +38,7 @@ class DopePopulaireWidget extends WP_Widget
  
   function widget($args, $instance)
   {
+   if (!isset($_GET['ajaxOn']) && !($_GET['ajaxOn'] == true)) {
     extract($args, EXTR_SKIP);
  
     echo $before_widget;
@@ -93,6 +94,7 @@ class DopePopulaireWidget extends WP_Widget
    <?php
  
     echo $after_widget;
+    }
   }
  
 }

@@ -9,12 +9,11 @@
 	<?php endif; ?>		
 	<?php } ?>
 	</div>
-		<?php if (!isset($_GET['ajaxOn']) && !($_GET['ajaxOn'] == true)) { ?>
 		<?php if ( is_sidebar_active('sidebar') ) : ?>
 			<?php dynamic_sidebar('sidebar'); ?>    
 		<?php endif; ?>
 	  
-	
+<?php if (!isset($_GET['ajaxOn']) && !($_GET['ajaxOn'] == true)) { ?>
 		
 	
 </div><!-- #secondary .widget-area -->
