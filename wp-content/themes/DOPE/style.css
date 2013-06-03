@@ -674,6 +674,7 @@ h2 {
 
 #content {
 	width:620px;
+	position: relative;
 }
 
 .post-home {

@@ -29,7 +29,7 @@ jQuery(document).ready(function($){
 		Spotlight.toggleSpotlight();
 	});
 	// Ajax Engine startup, links event handler 
-	AjaxEngine.initAjax();
+	AjaxEngine.initAjax(document.URL);
 	$('body').on('click', 'a', function(e){
 		var targetUrl = this.href;
 		if (AjaxEngine.isIntern(targetUrl)) {
@@ -114,8 +114,15 @@ jQuery(document).ready(function($){
 				$('#more-songs').css('display', 'block');
 			}
 		});
-
-	  AudioParser.getAudioMedia();
+		if (AjaxEngine.isArticle(document.URL))
+			{
+				AudioParser.getAudioMedia();
+				$('#more-songs').css('display', 'none');
+			} else
+			{
+				AudioParser.getLastSongs(10, 0, false);
+				$('#more-songs').css('display', 'block');
+			}
 	 });
 
 

@@ -32,11 +32,14 @@ jQuery(document).ready(function($){
 		}
 		//
 		function elementAnimationBefore(jSelector){
-		  jSelector.animate({'opacity': '0'}, {'duration': 600});
+		  jSelector.fadeOut(500);
+		  jSelector.css('left', '-800px');
 		}
 		//
 		function elementAnimationAfter(jSelector){
-		  jSelector.animate({'opacity': '1'}, {'duration': 600});
+		  //jSelector.css('opacity', '1');
+		  jSelector.fadeIn(800);
+		  jSelector.animate({'left': '0'}, {'duration': 700});
 		}
 		//
 		function updateElement(selector, newHtml) {
@@ -119,7 +122,7 @@ jQuery(document).ready(function($){
 		}
 		//
 		function initAjax(firstUrl){
-		  history.replaceState({"pushStateActive": true}, 'first page', document.URL);
+		  history.replaceState({"pushStateActive": true}, 'first page', firstUrl);
 		  window.onpopstate = function(event) {
 		    if (event.state && event.state.pushStateActive){
 		      loadPage(document.URL, false, ["#content", "#articles-widgets", "#ajax-scripts"]);
