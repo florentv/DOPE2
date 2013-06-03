@@ -47,9 +47,24 @@ class RecentPostsWidget extends WP_Widget
  
     $titleLength = empty($instance['titleLength']) ? 20 : $instance['titleLength'];
     $nbPosts = empty($instance['nbPosts']) ? 5 : $instance['nbPosts'];
- 	
+ 	$args = array(
+    'numberposts' => $nbPosts,
+    //'category' => 0,
+    'orderby' => 'post_date',
+    'order' => 'DESC',
+    'post_type' => 'post',
+    'post_status' => 'publish');
+    
+    $recentPosts = wp_get_recent_posts( $args, $output = ARRAY_A );
+    
  	echo $before_widget; 
- 
+ 	echo $before_title . "POSTS RECENTS" . $after_title;
+ 	echo "<ul id='recent-posts-list'>";
+ 	foreach($recentPosts as $post)
+ 	{
+	 	echo "<li>" . get_the_post_thumbnail($post['ID'], 'little', array('class' => 'sidebar-img-little')) . doped_title($post['post_title'],true, $titleLength) . "</li>";
+ 	}
+ 	echo "</ul>";
     echo $after_widget;
   }
  
