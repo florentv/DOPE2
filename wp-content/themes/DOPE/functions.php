@@ -241,6 +241,7 @@ function processContent($content){
 
 function insertPlayer($found) {
 	$found = preg_split("/[\|]/", $found[3]);
+	//return "<div data-src='". $found[0] ."'>PLAYER INSERTED HERE</div>";
 	return "<p><audio src='". $found[0] ."' preload='none' controls></audio>PLAYER INSERTED HERE</p>";
 }
 
