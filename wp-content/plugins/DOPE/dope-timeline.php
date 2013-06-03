@@ -81,7 +81,7 @@ class DopeMusicTimelineWidget extends WP_Widget
   		} ?>
   	</ul>
  	<?php } else {
- 		echo 'curl non supporté';
+ 		echo '...';
  	}
     echo $after_widget;
   }
