@@ -157,21 +157,11 @@ function wp_fetch_content() {
 function wp_get_post_thumbnail_img($related_post) {
 	$wp_rp = get_option("wp_rp");
 
-	$img = false;
 	if (isset($wp_rp["wp_rp_thumbnail"]) && $wp_rp["wp_rp_thumbnail"] && isset($wp_rp["wp_rp_thumbnail_post_meta"]) && $wp_rp["wp_rp_thumbnail_post_meta"]) {
-		if ($wp_rp["wp_rp_thumbnail_post_meta"] === 'wprp_featured_image') {
-			if (function_exists('has_post_thumbnail') && has_post_thumbnail($related_post->ID)) {
-				$img = get_the_post_thumbnail($related_post->ID, 'little');
-			}
-		} else {
-			$thumbnail_src = get_post_meta($related_post->ID, $wp_rp["wp_rp_thumbnail_post_meta"], true);
-			if ($thumbnail_src) {
-				$img = '<img src="'. $thumbnail_src .'" alt="'.wptexturize($related_post->post_title).'" />';
-			}
-		}
+		return get_the_post_thumbnail($related_post->ID, 'little');
 	}
+	return false;
 
-	return $img;
 }
 
 function wp_generate_related_posts_list_items($related_posts) {
