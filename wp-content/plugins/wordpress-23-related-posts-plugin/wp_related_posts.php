@@ -172,8 +172,9 @@ function wp_generate_related_posts_list_items($related_posts) {
 		$output .= '<li>';
 
 		$img = wp_get_post_thumbnail_img($related_post);
+		$link = get_permalink($related_post->ID);
 		if ($img) {
-			$output .=  '<a href="'.get_permalink($related_post->ID).'" title="'.wptexturize($related_post->post_title).'">' . $img . '</a>';
+			$output .=  '<a href="'.$link.'" title="'.wptexturize($related_post->post_title).'">' . $img . '</a>';
 		}
 
 		if (!$wp_rp["wp_rp_thumbnail"] || ($wp_rp["wp_rp_thumbnail"] && ($wp_rp["wp_rp_thumbnail_text"] || !$img))) {
@@ -182,7 +183,7 @@ function wp_generate_related_posts_list_items($related_posts) {
 				$output .= mysql2date($dateformat, $related_post->post_date) . " -- ";
 			}
 
-			$output .=  '<a href="'.get_permalink($related_post->ID).'" title="'.wptexturize($related_post->post_title).'">'.wptexturize($related_post->post_title).'</a>';
+			$output .=  '<a href="'.$link.'" title="'.wptexturize($related_post->post_title).'">'.wptexturize($related_post->post_title).'</a>';
 
 			if ($wp_rp["wp_rp_comments"]){
 				$output .=  " (" . $related_post->comment_count . ")";
