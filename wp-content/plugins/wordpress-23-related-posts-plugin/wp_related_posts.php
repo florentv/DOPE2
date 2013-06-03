@@ -158,7 +158,7 @@ function wp_get_post_thumbnail_img($related_post) {
 	$wp_rp = get_option("wp_rp");
 
 	if (isset($wp_rp["wp_rp_thumbnail"]) && $wp_rp["wp_rp_thumbnail"] && isset($wp_rp["wp_rp_thumbnail_post_meta"]) && $wp_rp["wp_rp_thumbnail_post_meta"]) {
-		return get_the_post_thumbnail($related_post->ID, 'little');
+		return get_the_post_thumbnail($related_post->ID, 'little', array('class' => 'sidebar-img-little'));
 	}
 	return false;
 
