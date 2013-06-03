@@ -9,7 +9,7 @@
     </div><!-- #wrapper -->
     <?php wp_footer(); ?>
   </body>
-  <div id='dopePlayer' style="display: none;height: 300px; overflow:scroll;z-index:100;position:fixed;bottom: 10px;">
+  <div id='dopePlayer' style="display: none;width: 330px;height: 100%; overflow:scroll;z-index:100;position:fixed;top: 10px;background-color: white">
     <button id="previous-player">Previous</button>
     <button id="next-player">Next</button>
     <button id="play-player">Play</button>
