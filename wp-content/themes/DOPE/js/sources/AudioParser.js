@@ -31,6 +31,7 @@ jQuery(document).ready(function($){
 		        track["artwork"] = dataFromDB["artwork"];
 		        track["artist"] = dataFromDB["artist"];
 		        track["title"] = dataFromDB["title"];
+		        track["linkToPost"] = dataFromDB["linkToPost"];
 		        doCallbacks(track);
 		      });           
 		    }
@@ -50,6 +51,7 @@ jQuery(document).ready(function($){
 		        track["url"] += "consumer_key=" + consumerKey;
 		        SongProxy.getSongInfo(url_nosecret, function(dataFromDB){
 		          track["artwork"] = track["artwork"] || dataFromDB["artwork"];
+		          track["linkToPost"] = dataFromDB["linkToPost"];
 		          doCallbacks(track);
 		        });            
 		      });
