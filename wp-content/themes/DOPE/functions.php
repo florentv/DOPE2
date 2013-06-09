@@ -293,6 +293,7 @@ function get_dope_song_by_url($urls)
  foreach ($response as $key => $row) {
  	$response[$key]['artwork'] = wp_get_attachment_image_src(get_post_thumbnail_id($row['post_id']), 'little');
  	$response[$key]['artwork'] = $response[$key]['artwork'][0];
+ 	$response[$key]['linkToPost'] = get_permalink($row['post_id']);
  }
  return $response;
 }
