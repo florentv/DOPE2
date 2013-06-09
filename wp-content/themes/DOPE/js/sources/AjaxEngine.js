@@ -7,7 +7,8 @@ jQuery(document).ready(function($){
 	AjaxEngine = (function(){
 		var commentTemplate = $('#new-comment-template').html(),
 		    loadingLayer = $("#loading"),
-		    onLoadCallbacks = [];
+		    onLoadCallbacks = [],
+		    elementsAnimation = {};
 		//
 		function isArticle(url) {
 		  return !(/wordpress\/(?:category|page|$){1}/.test(url));
@@ -31,31 +32,26 @@ jQuery(document).ready(function($){
 		  });
 		}
 		//
-		function elementAnimationBefore(jSelector){
-		  jSelector.fadeOut(500);
-		  jSelector.css('left', '-800px');
-		}
-		//
-		function elementAnimationAfter(jSelector){
-		  //jSelector.css('opacity', '1');
-		  jSelector.fadeIn(800);
-		  jSelector.animate({'left': '0'}, {'duration': 700});
-		}
-		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
-		  //console.log(newHtml.html());
-		  jSelector.queue(elementAnimationBefore(jSelector))
-		       .queue(function(){
-		                    jSelector.html(newHtml.find(selector).html());
-		                    jSelector.dequeue();
-		                  })
-		       .queue(elementAnimationAfter(jSelector));
+		  if (_keys(elementsAnimation).indexOf(selector) !== -1)
+		  {
+			  jSelector.queue( elementsAnimation[selector]["before"](jSelector) );
+			  jSelector.queue(function(){
+			                    jSelector.html(newHtml.find(selector).html());
+			                    jSelector.dequeue();
+			                  });
+			  jSelector.queue(elementsAnimation[selector]["after"](jSelector));
+		  } else
+		  {
+             jSelector.html(newHtml.find(selector).html());
+		  }
 		}
 		//
 		function renderPage(content, selectors){
 		  var tmpDiv,
-		      lastSelector;
+		      lastSelector,
+		      wait;
 		  try {
 		    tmpDiv = $("<div>").append($.parseHTML(content));
 		  } catch(e) {
@@ -64,16 +60,20 @@ jQuery(document).ready(function($){
 		    return;
 		  }
 		  document.title = tmpDiv.find('title').html();
-		  $("meta").remove();
+		  wait = $("<div>");
 		  forEach(selectors, function(i, selector){
 		    updateElement(selector, tmpDiv);
+		    wait.queue(function(){});
+		    $(selector).queue(function(){
+			    wait.dequeue();
+			    $(this).dequeue();
+		    });
 		  },this);
 
-		  lastSelector = $(selectors.pop());
-		  lastSelector.queue(function(){
+		  wait.queue(function(){
 		    globalAnimationAfterLoading();
 			doCallbacks(document.URL);
-		    lastSelector.dequeue(); //
+		    wait.dequeue();
 		    });
 		  tmpDiv.remove();
 		}
@@ -90,6 +90,11 @@ jQuery(document).ready(function($){
 		//
 		function onLoadPage(callback){
 		  onLoadCallbacks.push(callback);
+		}
+		// animations {"before": fn, "after": fn}
+		function bindElementAnimation(selector, animations)
+		{
+			elementsAnimation[selector] = animations;
 		}
 		//
 		function doCallbacks(url)
@@ -123,6 +128,7 @@ jQuery(document).ready(function($){
 		//
 		function initAjax(firstUrl){
 		  history.replaceState({"pushStateActive": true}, 'first page', firstUrl);
+		  $("meta").remove();
 		  window.onpopstate = function(event) {
 		    if (event.state && event.state.pushStateActive){
 		      loadPage(document.URL, false, ["#content", "#articles-widgets", "#ajax-scripts"]);
@@ -145,7 +151,8 @@ jQuery(document).ready(function($){
 		  "isArticle": isArticle,
 		  "isPagedLink": isPagedLink,
 		  "isIntern": isIntern,
-		  "onLoadPage": onLoadPage
+		  "onLoadPage": onLoadPage,
+		  "bindElementAnimation": bindElementAnimation
 		}
 	}());
 });

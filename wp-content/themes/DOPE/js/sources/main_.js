@@ -28,18 +28,42 @@ jQuery(document).ready(function($){
 	$("#spotlight-switch").on('click', function(e){
 		Spotlight.toggleSpotlight();
 	});
-	// Ajax Engine startup, links event handler 
+	
+	// Ajax Engine startup, animations registering, links event handler 
 	AjaxEngine.initAjax(document.URL);
+	// Animation registering
+	function mainAnimationBefore(jSelector)
+	{
+	//	jSelector.fadeOut(1000);
+	//	jSelector.css('left', '-800px');
+		jSelector.animate({'left': '-800'}, {'duration': 700});
+	}
+	function mainAnimationAfter(jSelector)
+	{
+		//jSelector.fadeIn(800);
+		jSelector.animate({'left': '0'}, {'duration': 700});
+	}
+	AjaxEngine.bindElementAnimation('#content', {"before": mainAnimationBefore, "after": mainAnimationAfter});
+	function articleWidgetsAnimationBefore(jSelector)
+	{
+		jSelector.fadeOut(800);
+	}
+	function articleWidgetsAnimationAfter(jSelector)
+	{
+		jSelector.fadeIn(800);
+	}
+	AjaxEngine.bindElementAnimation('#articles-widgets', {"before": articleWidgetsAnimationBefore, "after": articleWidgetsAnimationAfter});
+	//
 	$('body').on('click', 'a', function(e){
 		var targetUrl = this.href;
 		if (AjaxEngine.isIntern(targetUrl)) {
 		  e.preventDefault();
 		  if (AjaxEngine.isArticle(targetUrl)) {
-		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
+		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
 		  } else if (AjaxEngine.isPagedLink(targetUrl)) {
 		    AjaxEngine.appendNextPage(targetUrl, "#nav-below");
 		  } else {
-		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content"]);
+		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', "#dope-aleatoire-content"]);
 		  }
 		}
 	});
@@ -87,7 +111,7 @@ jQuery(document).ready(function($){
   soundManager.onready(function() {
 	  Playlist.onSongAdded(function(newSong){
 	    var template = $("#song-template").html();
-	    var newContent = Mustache.to_html(template, {"artist": newSong.artist, "title": newSong.title, "artwork": newSong.artwork, "song_id": newSong.id});
+	    var newContent = Mustache.to_html(template, {"artist": newSong.artist, "title": newSong.title, "linkToPost": newSong.linkToPost, "artwork": newSong.artwork, "song_id": newSong.id});
 	    $("#song-list").append(newContent);
 	  });
 	  $("#dopePlayer").css("display", "block");
