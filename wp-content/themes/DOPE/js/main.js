@@ -6426,7 +6426,8 @@ jQuery(document).ready(function($){
 	AjaxEngine = (function(){
 		var commentTemplate = $('#new-comment-template').html(),
 		    loadingLayer = $("#loading"),
-		    onLoadCallbacks = [];
+		    onLoadCallbacks = [],
+		    elementsAnimation = {};
 		//
 		function isArticle(url) {
 		  return !(/wordpress\/(?:category|page|$){1}/.test(url));
@@ -6450,31 +6451,26 @@ jQuery(document).ready(function($){
 		  });
 		}
 		//
-		function elementAnimationBefore(jSelector){
-		  jSelector.fadeOut(500);
-		  jSelector.css('left', '-800px');
-		}
-		//
-		function elementAnimationAfter(jSelector){
-		  //jSelector.css('opacity', '1');
-		  jSelector.fadeIn(800);
-		  jSelector.animate({'left': '0'}, {'duration': 700});
-		}
-		//
 		function updateElement(selector, newHtml) {
 		  var jSelector = $(selector);
-		  //console.log(newHtml.html());
-		  jSelector.queue(elementAnimationBefore(jSelector))
-		       .queue(function(){
-		                    jSelector.html(newHtml.find(selector).html());
-		                    jSelector.dequeue();
-		                  })
-		       .queue(elementAnimationAfter(jSelector));
+		  if (_keys(elementsAnimation).indexOf(selector) !== -1)
+		  {
+			  jSelector.queue( elementsAnimation[selector]["before"](jSelector) );
+			  jSelector.queue(function(){
+			                    jSelector.html(newHtml.find(selector).html());
+			                    jSelector.dequeue();
+			                  });
+			  jSelector.queue(elementsAnimation[selector]["after"](jSelector));
+		  } else
+		  {
+             jSelector.html(newHtml.find(selector).html());
+		  }
 		}
 		//
 		function renderPage(content, selectors){
 		  var tmpDiv,
-		      lastSelector;
+		      lastSelector,
+		      wait;
 		  try {
 		    tmpDiv = $("<div>").append($.parseHTML(content));
 		  } catch(e) {
@@ -6483,16 +6479,20 @@ jQuery(document).ready(function($){
 		    return;
 		  }
 		  document.title = tmpDiv.find('title').html();
-		  $("meta").remove();
+		  wait = $("<div>");
 		  forEach(selectors, function(i, selector){
 		    updateElement(selector, tmpDiv);
+		    wait.queue(function(){});
+		    $(selector).queue(function(){
+			    wait.dequeue();
+			    $(this).dequeue();
+		    });
 		  },this);
 
-		  lastSelector = $(selectors.pop());
-		  lastSelector.queue(function(){
+		  wait.queue(function(){
 		    globalAnimationAfterLoading();
 			doCallbacks(document.URL);
-		    lastSelector.dequeue(); //
+		    wait.dequeue();
 		    });
 		  tmpDiv.remove();
 		}
@@ -6509,6 +6509,11 @@ jQuery(document).ready(function($){
 		//
 		function onLoadPage(callback){
 		  onLoadCallbacks.push(callback);
+		}
+		// animations {"before": fn, "after": fn}
+		function bindElementAnimation(selector, animations)
+		{
+			elementsAnimation[selector] = animations;
 		}
 		//
 		function doCallbacks(url)
@@ -6542,6 +6547,7 @@ jQuery(document).ready(function($){
 		//
 		function initAjax(firstUrl){
 		  history.replaceState({"pushStateActive": true}, 'first page', firstUrl);
+		  $("meta").remove();
 		  window.onpopstate = function(event) {
 		    if (event.state && event.state.pushStateActive){
 		      loadPage(document.URL, false, ["#content", "#articles-widgets", "#ajax-scripts"]);
@@ -6564,7 +6570,8 @@ jQuery(document).ready(function($){
 		  "isArticle": isArticle,
 		  "isPagedLink": isPagedLink,
 		  "isIntern": isIntern,
-		  "onLoadPage": onLoadPage
+		  "onLoadPage": onLoadPage,
+		  "bindElementAnimation": bindElementAnimation
 		}
 	}());
 });
@@ -6804,6 +6811,7 @@ jQuery(document).ready(function($){
 		        track["artwork"] = dataFromDB["artwork"];
 		        track["artist"] = dataFromDB["artist"];
 		        track["title"] = dataFromDB["title"];
+		        track["linkToPost"] = dataFromDB["linkToPost"];
 		        doCallbacks(track);
 		      });           
 		    }
@@ -6823,6 +6831,7 @@ jQuery(document).ready(function($){
 		        track["url"] += "consumer_key=" + consumerKey;
 		        SongProxy.getSongInfo(url_nosecret, function(dataFromDB){
 		          track["artwork"] = track["artwork"] || dataFromDB["artwork"];
+		          track["linkToPost"] = dataFromDB["linkToPost"];
 		          doCallbacks(track);
 		        });            
 		      });
@@ -8583,18 +8592,42 @@ jQuery(document).ready(function($){
 	$("#spotlight-switch").on('click', function(e){
 		Spotlight.toggleSpotlight();
 	});
-	// Ajax Engine startup, links event handler 
+	
+	// Ajax Engine startup, animations registering, links event handler 
 	AjaxEngine.initAjax(document.URL);
+	// Animation registering
+	function mainAnimationBefore(jSelector)
+	{
+	//	jSelector.fadeOut(1000);
+	//	jSelector.css('left', '-800px');
+		jSelector.animate({'left': '-800'}, {'duration': 700});
+	}
+	function mainAnimationAfter(jSelector)
+	{
+		//jSelector.fadeIn(800);
+		jSelector.animate({'left': '0'}, {'duration': 700});
+	}
+	AjaxEngine.bindElementAnimation('#content', {"before": mainAnimationBefore, "after": mainAnimationAfter});
+	function articleWidgetsAnimationBefore(jSelector)
+	{
+		jSelector.fadeOut(800);
+	}
+	function articleWidgetsAnimationAfter(jSelector)
+	{
+		jSelector.fadeIn(800);
+	}
+	AjaxEngine.bindElementAnimation('#articles-widgets', {"before": articleWidgetsAnimationBefore, "after": articleWidgetsAnimationAfter});
+	//
 	$('body').on('click', 'a', function(e){
 		var targetUrl = this.href;
 		if (AjaxEngine.isIntern(targetUrl)) {
 		  e.preventDefault();
 		  if (AjaxEngine.isArticle(targetUrl)) {
-		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
+		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', "#dope-aleatoire-content", '#ajax-scripts']);
 		  } else if (AjaxEngine.isPagedLink(targetUrl)) {
 		    AjaxEngine.appendNextPage(targetUrl, "#nav-below");
 		  } else {
-		    AjaxEngine.loadPage(targetUrl, true, ['head', '#content', '#articles-widgets', "#dope-aleatoire-content"]);
+		    AjaxEngine.loadPage(targetUrl, true, ['#content', '#articles-widgets', "#dope-aleatoire-content"]);
 		  }
 		}
 	});
@@ -8642,7 +8675,7 @@ jQuery(document).ready(function($){
   soundManager.onready(function() {
 	  Playlist.onSongAdded(function(newSong){
 	    var template = $("#song-template").html();
-	    var newContent = Mustache.to_html(template, {"artist": newSong.artist, "title": newSong.title, "artwork": newSong.artwork, "song_id": newSong.id});
+	    var newContent = Mustache.to_html(template, {"artist": newSong.artist, "title": newSong.title, "linkToPost": newSong.linkToPost, "artwork": newSong.artwork, "song_id": newSong.id});
 	    $("#song-list").append(newContent);
 	  });
 	  $("#dopePlayer").css("display", "block");
