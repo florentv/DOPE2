@@ -27,9 +27,10 @@
     		</a>
     	</li>
     	</script>
+      <!-- template son -->
       <script id="song-template" type="text/template">
       <li class="song" data-track-id={{{song_id}}}>
-          <img width="40" height="40" src="{{{artwork}}}" class="attachment-little wp-post-image"/><span>{{{artist}}} {{{title}}}</span>
+         <img width="40" height="40" src="{{{artwork}}}" class="attachment-little wp-post-image"/><span>{{{artist}}} | {{{title}}} - </span><a href="{{{linkToPost}}}">view article</a>
       </li>
     </script>
     <!--Template pour l'ajout d'un nouveau commentaire-->
