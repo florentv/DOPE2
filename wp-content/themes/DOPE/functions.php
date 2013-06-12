@@ -107,9 +107,15 @@ function doped_date($wp_date) {
 }
 
 
-function curl_JSON($call, $assiocative=false) {
+function curl_JSON($call, $assiocative=false, $post = false, $postfields="", $header=array()) {
   $ch = curl_init($call);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+  curl_setopt($ch, CURLOPT_POST, $post);
+  if ($postfields != "")
+  {
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+  }
   $output = curl_exec($ch);
   curl_close($ch);
 	return ($output) ? json_decode($output, $assiocative) : false;
@@ -126,6 +132,19 @@ function get_FBlikes($url) {
  } else {
  	 return "no resp from FB";	
  }
+}
+//
+function getTwitterToken()
+{
+	$basicSecret = "Authorization: Basic Vld4ZUN6ZVVXQjQweEVvNnEzb0E6NTZBYmFVV1pvREV6SlBKT1BHakZKa1V0eFdRZDBTNXR6N2dhWUEyZHhZOA==";
+	$header = array($basicSecret, "Content-Type: application/x-www-form-urlencoded;charset=UTF-8");
+	$url = "https://api.twitter.com/oauth2/token";
+	$response = curl_JSON($url, false, true, "grant_type=client_credentials", $header) ;
+	if ($response->token_type == "bearer")
+	{
+		return $response->access_token;
+	}
+	return "no token";
 }
 
 //Récupère le nombre de tweets associés à une url

@@ -46,9 +46,11 @@ class DopeMusicTimelineWidget extends WP_Widget
  
     if (!empty($title))
       echo $before_title . $title . $after_title;
- 
-  	$url = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=dope_music&count='. $tweetCount .'&include_entities=1&include_rts=1';
-  	$result = curl_JSON($url) ;
+      
+	$bearer = "Authorization: Bearer " . getTwitterToken();
+  	$url = "https://api.twitter.com/1.1/statuses/user_timeline.json?count=". $tweetCount ."&screen_name=dope_music&include_entities=1&include_rts=1";
+  	$header = array($bearer);
+  	$result = curl_JSON($url, false, false, "", $header) ;
   	if (is_array($result)) {?>
   	<ul id="tweets-container">
   		<?php foreach ($result as $tweet) {
